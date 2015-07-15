@@ -52,6 +52,11 @@ r.mask -o input=lu.rast
 #send land use categories to txt file
 r.describe -1 -n map=lu.rast >$foldout/statistics/landscape_values.txt
 
+#adding labels to landscape_values.txt
+
+
+
+
 ##########Work on DTM#########################
 
 #change mapset resolution
