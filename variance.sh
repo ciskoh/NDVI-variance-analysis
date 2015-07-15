@@ -133,7 +133,7 @@ do
 		r.mapcalc "$str25=float(if($str1>$yquant,$yquant,$str1))"
 		echo "check $str2 max value should be $yquant"
 		
-		#creating textfile with category statistics
+		#CREATING TEXTFILE WITH LANDSCAPE STATS
 		
 		#filename for value list for each landscape class
 			vlist=$foldout2/statistics/lsvalue.csv
@@ -142,17 +142,32 @@ do
 		if [[ dcount -eq "0" ]]; then
 			echo "creating text file with quantile values for $g"
 			#creating column headers
-			echo "ls-code; label" >$vlist
+			echo "ls-code; land use; slope; aspect" >$vlist
 		fi
-		#first time of category, adding category and label
+		
+		#first time of category, adding category details
 		if [[ count -eq "0" ]]; then
+		#separating code into land use, slope and aspect
+		lu=$((g/100))
+		slope=$(((g/10)-(lu*10)))
+		aspect=$((g-(lu*100)-(slope*10)))
+		echo "$g; $lu; $slope; $aspect">>$vlist #updating $vlist
+		fi
+		echo "check vlist at $vlist"
+		read ok
 		
 		
+		sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF"
+		sed -i "1 s/$/ $sedstrg/" $vlist
+		
+
 			#writing values on the vlist file
 		echo "writing values on the vlist file"
-		echo "$g; $ndname; $NDVI90; $min; $med; $varc" >>$vlist
+		#TODO append to end line
+		echo $NDVI90; $min; $med; $varc" >>$vlist
 		echo "$g; $ndname; $NDVI90; $min; $med; $varc"		
 		#####read ok
+		
 		
 		
 		str3=$s"_"$ndname"_norm_"$g
