@@ -147,26 +147,35 @@ do
 		
 		#first time of category, adding category details
 		if [[ count -eq "0" ]]; then
-		#separating code into land use, slope and aspect
-		lu=$((g/100))
-		slope=$(((g/10)-(lu*10)))
-		aspect=$((g-(lu*100)-(slope*10)))
-		echo "$g; $lu; $slope; $aspect">>$vlist #updating $vlist
+			#separating code into land use, slope and aspect
+			lu=$((g/100))
+			slope=$(((g/10)-(lu*10)))
+			aspect=$((g-(lu*100)-(slope*10)))
+			echo "$g; $lu; $slope; $aspect">>$vlist #updating $vlist
 		fi
 		echo "check vlist at $vlist"
 		read ok
 		
-		
-		sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF"
-		sed -i "1 s/$/ $sedstrg/" $vlist
-		
+
+		if [[ scount -eq "0" ]]; then
+			
+	
+			sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF"
+			sed -i "1 s/$/ $sedstrg/" $vlist #writing column titles for image $h
+		echo "check single image column titles at $vlist"
+		read ok
+		fi 
 
 			#writing values on the vlist file
 		echo "writing values on the vlist file"
 		#TODO append to end line
-		echo $NDVI90; $min; $med; $varc" >>$vlist
-		echo "$g; $ndname; $NDVI90; $min; $med; $varc"		
-		#####read ok
+		sedstrg2="$NDVI90; $min; $med; $varc"
+		sed -i "$ s/$/$sedstrg2/" $vlist
+		echo " check values for column $g and image $h at $vlist
+
+$g; $ndname; $NDVI90; $min; $med; $varc
+"		
+		read ok
 		
 		
 		
