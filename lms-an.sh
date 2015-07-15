@@ -16,7 +16,6 @@ echo "Script to evaluate NDVI change in one area throughout the year
 
 echo "steps: 
 1-importing the images(script ndvi.sh) 
-
 2-athmospheric correction(script ndvi.sh) 
 
 3-NDVI(script ndvi.sh) 
