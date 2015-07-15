@@ -7,6 +7,7 @@
 #foldout=folder with /ndvi subfolder for export
 
 # 1-IMPORTING IMAGES
+
 #set adequate resolution
 
 count=0
