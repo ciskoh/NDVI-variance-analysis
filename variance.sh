@@ -101,15 +101,7 @@ do
 		
 		#exporting quantile values in other text file for $g
 
-		#filename for value list for each landscape class
-			vlist=$foldout2/statistics/category_stats/lsvalue.csv
-		#first time file creation
-		dcount=$((count+scount))
-		if [[ dcount -eq "0" ]]; then
-			echo "creating text file with quantile values for $g"
-			#creating column headers
-			echo "landscape; date; NDVI-90; MIN; MEDIAN; VARCOEFF" >$vlist
-		fi
+		
 		#extraction of 9oth quantile, Min, Median, Variation coefficient, for present category
 		#NDVI90
 		NDVI90=$(sed -n '22p' < $spath)
@@ -127,11 +119,7 @@ do
 		varc=$(sed -n '14p' < $spath)
 		varc=${varc#*:}
 		
-		#writing values on the vlist file
-		echo "writing values on the vlist file"
-		echo "$g; $ndname; $NDVI90; $min; $med; $varc" >>$vlist
-		echo "$g; $ndname; $NDVI90; $min; $med; $varc"		
-		#####read ok
+		
 
 		echo "check statistics @ $vlist"
 		######read ok
@@ -144,18 +132,29 @@ do
 		str25=$s"temp25"
 		r.mapcalc "$str25=float(if($str1>$yquant,$yquant,$str1))"
 		echo "check $str2 max value should be $yquant"
-		#eliminating noise through 2% quantiles
-		#str2=$s"temp2"
-		#r.mapcalc "$str2=float(if($str25<$lquant,$lquant,$str25))"
-		#echo "check $str2 max value should be $yquant and lowest value should be $lquant"
-		###read ok
-###read ok
- 
+		
+		#creating textfile with category statistics
+		
+		#filename for value list for each landscape class
+			vlist=$foldout2/statistics/lsvalue.csv
+		#first time file creation
+		dcount=$((count+scount))
+		if [[ dcount -eq "0" ]]; then
+			echo "creating text file with quantile values for $g"
+			#creating column headers
+			echo "ls-code; label" >$vlist
+		fi
+		#first time of category, adding category and label
+		if [[ count -eq "0" ]]; then
 		
 		
-		#TODO: verify if better reclass or rescale (to prevent loosing variance)
-		#actual reclassification
-		#TODO problem with masks
+			#writing values on the vlist file
+		echo "writing values on the vlist file"
+		echo "$g; $ndname; $NDVI90; $min; $med; $varc" >>$vlist
+		echo "$g; $ndname; $NDVI90; $min; $med; $varc"		
+		#####read ok
+		
+		
 		str3=$s"_"$ndname"_norm_"$g
 
 		#r.reclass input=$str2 output=$str3 rules=$foldout2/statistics/rec_rules/rec_rules_$g"-"$ndname.txt
