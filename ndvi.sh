@@ -80,11 +80,12 @@ do
 	fi
 
 
-		        
-	echo "name=$short date=$ldate image=$name" >>$foldout/statistics/images_date.txt
+	echo "
+	The following images are considered for the analysis:">>$readme
+	echo "name=$short date=$ldate image=$name" >>$readme
 	 
-	echo "month is $month; check output file $foldout/statistics/images_date.txt"
-	###read ok
+	echo "month is $month; check output file $readme"
+	read ok
 
 	short=$year$month
 

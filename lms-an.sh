@@ -153,6 +153,21 @@ else
 	. $varpath
 fi
 
+#writing file with script details
+readme=$foldout/README-script-details.txt #path to readme txt
+echo "Evaluation of NDVI change in one area throughout the year" >$readme
+loc=$(g.gisenv -n get=LOCATION_NAME)
+da=$(date)
+echo "Executed for the area of $loc on $da">>$readme 
+
+sets=$(sed -n 3,13p $varpath)
+echo "
+Using the following settings:
+$sets">>$readme
+
+echo "check readme file at $readme"
+read ok
+
 echo "$foldout , $fold $code $LU, $arul"
 #read ok
 #create output folder
@@ -161,6 +176,7 @@ mkdir -p $foldout/ndvi
 mkdir -p $foldout/statistics
 mkdir -p $foldout/vectors
 mkdir -p $foldout/rasters
+
 
 g.region res=30
 

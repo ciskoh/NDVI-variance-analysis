@@ -237,7 +237,10 @@ r.to.vect -s -v --overwrite --verbose input=landscape output=landscape feature=a
 v.out.ogr -c input=landscape type=area dsn=$foldout/vectors/
 
 #export area stats per landscape map
-r.stats -a -p -n input=landscape fs=tab >$foldout/statistics/landscape_area_stats.txt
+echo"
+The following landscape categories where created:
+">>$readme
+r.stats -a -p -n input=landscape fs=tab >>$readme
 
 r.mask -r
 
