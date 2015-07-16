@@ -38,16 +38,16 @@ do
 	#TODO change potential calculation from yearly mean to single frame 
 	#calculation of year round 90th quantile
 	if [[ scount -eq "0" ]]; then #if for creating folder for statistics
-			mkdir -p $foldout2/statistics/category_stats
-			mkdir -p $foldout2/statistics/category_stats/$g
+			mkdir -p $foldout2/category_stats
+			mkdir -p $foldout2/category_stats/$g
 		fi
 	#calculation of statistics
-	r.univar -e map=$nlist2 percentile=25,50,75,90,2 >$foldout2/statistics/category_stats/$g-yearly-stats.txt
+	r.univar -e map=$nlist2 percentile=25,50,75,90,2 >$foldout2/category_stats/$g-yearly-stats.txt
 
-	echo "check $foldout2/statistics/category_stats/$g-yearly-stats.txt"
+	echo "check $foldout2/category_stats/$g-yearly-stats.txt"
 	###read ok
 	#identifying 90th quantile
-	mpath=$foldout2/statistics/category_stats/$g-yearly-stats.txt #path to yearly stats
+	mpath=$foldout2/category_stats/$g-yearly-stats.txt #path to yearly stats
 	p90a=$(sed -n '22p' < $mpath)
 
 	p90=${p90a#*:}
@@ -78,11 +78,12 @@ do
 		
 	#actual calculation of percentiles
 		if [[ count -eq "0" ]]; then
-			mkdir -p $foldout2/statistics/category_stats
+			mkdir -p $foldout2/category_stats
+			mkdir -p $foldout2/statistics
 			#mkdir -p $foldout2/statistics/category_stats/$g
 		fi
 		#string for statistics file 
-		spath=$foldout2/statistics/category_stats/$g/$g-$ndname-stats.txt
+		spath=$foldout2/category_stats/$g/$g-$ndname-stats.txt
 	
 		r.univar -e map=$h percentile=25,50,75,90 >$spath
 
@@ -136,7 +137,7 @@ do
 		#CREATING TEXTFILE WITH LANDSCAPE STATS
 		
 		#filename for value list for each landscape class
-			vlist=$foldout2/statistics/lsvalue.csv
+			vlist=$foldout/statistics/lsvalue.csv
 		#first time file creation
 		dcount=$((count+scount))
 		if [[ dcount -eq "0" ]]; then
@@ -255,6 +256,56 @@ echo "fl is $fl"
 r.series input=$fl output=$s"_final_allyear",$s"_final_stdev",$s"_final_linreg" method=average,stddev,slope
 echo "check "$s"_final_allyear",$s"_final_stdev",$s"_final_linreg before exporting"
 ###read ok
+
+#extracting values from final map
+count=0
+for g in $lsv ;
+do
+
+	echo "calculating stats category $g"
+	
+	#creating mask for category $g
+	echo "creating mask for category $g"
+	r.mask -o input=$basemap maskcats=$g
+	####read ok
+	
+	if [[ count -eq "0" ]]; then
+		sed -i "1 s/$/ Very-deg; Deg; Semi-Deg; Healthy; Veg-Pot;/" $vlist adding column titles
+	fi
+	d=$((count+1)) #number of line to use in file lsvalue.csv
+
+	#extracting different deg categories from final map
+	fin=$s"_final_allyear"
+	r.mapcalc "tempdeg1=$fin<25"
+	r.mapcalc "tempdeg2=$fin>25 AND $fin<50"
+	r.mapcalc "tempdeg3=$fin>50 AND $fin<75"
+	r.mapcalc "tempdeg4=$fin>75 AND $fin<90"
+	r.mapcalc "tempdeg5=$fin>90"
+	
+	
+	#calculating statistics for each deg level and extractin sum of values (pixel count)
+
+	a=$(r.univar -g --quiet map=tempdeg1)
+	deg1=${a##*sum=}
+
+	a=(r.univar -g --quiet map=tempdeg2)
+	deg2=${a##*sum=}
+
+	a=(r.univar -g --quiet map=tempdeg3)
+	deg3=${a##*sum=}
+
+	a=(r.univar -g --quiet map=tempdeg4)
+	deg4=${a##*sum=}
+
+	a=(r.univar -g --quiet map=tempdeg5)
+	deg5=${a##*sum=}
+
+sed -i "$d s/$/ deg1; $deg2; $deg3; $deg4; $deg5;/" $vlist
+"check values for $g in file $vlist line $d; they sould be $deg1; $deg2; $deg3; $deg4; $deg5;"
+read ok
+
+count=$((count+1))
+done
 
 #exporting final maps
 r.out.gdal input=$s"_final_allyear" output=/$foldout/rasters/$s"_final_allyear.tiff" nodata=255
