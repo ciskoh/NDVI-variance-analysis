@@ -1,0 +1,2 @@
+211; 2; 1; 1 $h-VP; $h-min; $h-med; $h-varCOEFF "$a" $h-VP; $h-min; $h-med; $h-varCOEFFjan14-VP; jan14-min; jan14-med; jan14-varCOEFFblablabla
+211; 2; 1; 1

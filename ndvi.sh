@@ -35,7 +35,7 @@ do
 	echo "i is $i"
 	name=${i##*/}
 	echo "name is $name"
-	#read ok
+	##read ok
 	ent=$(sed -n '21p' $i/$name"_MTL.txt")
 	ent="$(echo "${ent}" | tr -d '[[:space:]]')"
 
@@ -49,10 +49,10 @@ do
 	sdate=${ldate:5:2}
 	
 	echo "YEAR is $year"
-	#read ok
+	##read ok
 	
 		echo "ent is $ent, year is $year,ldate is $ldate sdate is $sdate yoyoyo"
-	#read ok
+	##read ok
 		if [ $((10#$sdate)) -eq 01 ]; then
 		month=jan
 		elif [ $((10#$sdate)) -eq 02 ]; then
@@ -85,14 +85,14 @@ do
 	echo "name=$short date=$ldate image=$name" >>$readme
 	 
 	echo "month is $month; check output file $readme"
-	read ok
+	#read ok
 
 	short=$year$month
 
 	#short=${name:9:7};
 	#echo "short is $short";
 	echo "short is $short"
-	#read ok
+	##read ok
 
 	#subloop to import all bands of the image
 
@@ -113,7 +113,7 @@ do
 	done 
 
 echo "check imported bands of image $name"
-###read ok
+####read ok
 
 # 2-ATHMOSPHERIC CORRECTION
 
@@ -128,7 +128,7 @@ corr="corr_"$short"_"
 i.landsat.toar input_prefix=$short"_B" output_prefix=$corr metfile=$meta sensor=ot8 method=dos2
 
 echo "check athmospheric corrected images"
-###read ok
+####read ok
 
 #3-ndvi calculation
 #ndvi for corrected images
@@ -137,7 +137,7 @@ b4=$corr"4"
 b5=$corr"5"
 
 echo "this are the rasters for ndvi: $b4 and $b5"
-###read ok
+####read ok
 
 
 #NDVI calc-string for mapcalc
@@ -165,7 +165,7 @@ g.mremove -f rast=$short*
 g.mremove -f rast=$corr*
 
 echo "cycle restarting"
-###read ok
+####read ok
 
 done
 
@@ -174,7 +174,7 @@ g.mlist -m pattern='corr*' separator=comma >/$foldout/statistics/ndvi_list.txt
 g.mlist -m pattern='corr*' >/$foldout/statistics/ndvi_list2.txt
 
 echo "check list at /$foldout/statistics/ndvi_list.txt"
-###read ok
+####read ok
 
 #end
 echo "all the images from $fold have been imported into grass

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #path to variables
-varpath=/media/matt/MJR-gis/6-Creete/ls_analysis/sv-crete-small.sh
+varpath=/media/matt/MJR-gis/3-Spain/ls_analysis/new/scriptvar.sh
 
 ###MAIN Script to evaluate NDVI change in one area throughout the year
 
@@ -145,7 +145,7 @@ echo "imp=$imp #importing images 1=yes" >>$foldout/scriptvar.sh  #for variable f
 read ycalc 
 echo "ycalc=$ycalc #type of quantile calculation 0=yearly" >>$foldout/scriptvar.sh
 echo "file with variable created: check $foldout/scriptvar.sh"
-read ok
+#read ok
 
 
 else
@@ -166,10 +166,10 @@ Using the following settings:
 $sets">>$readme
 
 echo "check readme file at $readme"
-read ok
+#read ok
 
 echo "$foldout , $fold $code $LU, $arul"
-#read ok
+##read ok
 #create output folder
 #TODO optimize folder creation
 mkdir -p $foldout/ndvi
@@ -215,12 +215,12 @@ lsv=`cat $foldout/statistics/landscape_values.txt`;
 if [ "$imp" -eq "1" ];
 	then
 	echo "I will import the images"
-	#read ok
+	##read ok
 	. $sdir/ndvi.sh;
 	else 
 	nlist2=`cat $foldout/statistics/ndvi_list2.txt`
 	echo "I will not import the images, will use those  instead $nlist2"
-	#read ok;
+	##read ok;
 fi
 
 ########classification of ndvi variance through variance.sh
@@ -232,7 +232,7 @@ mkdir -p $foldout/state
 foldout2=$foldout/state
 if [[ ycalc -eq 0 ]]; then
 	echo "using yearly quantile"
-	#read ok
+	##read ok
 	. $sdir/variance2.sh
 else
 	. $sdir/variance.sh
@@ -240,7 +240,7 @@ fi
 
 #TODO FOR MANAGEMENT MAP
 echo "continue with management???"
-#read ok
+##read ok
 basemap=landscape
 s=a1
 mkdir -p $foldout/management

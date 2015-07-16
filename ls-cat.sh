@@ -28,7 +28,7 @@ v.in.ogr dsn=$LU output=LU_vec snap=1e-09
 
 #g.list type=rast,vect
 echo "verify imported files"
-#read ok
+##read ok
 
 #END of import files
 
@@ -112,7 +112,7 @@ r.patch --o input=asp.recl_big,asp.neigh7,asp.neigh5,asp.neigh3,asp.neigh1 outpu
 r.mapcalc "asp.gen=asp.reclass"
 
 echo " is asp.gen ok?"
-#read ok
+##read ok
 #send categories and labels to txtfile
 
 r.describe -1 -n map=asp.gen >$foldout/statistics/asp_cat.txt
@@ -153,7 +153,7 @@ d.vect map=LU_vec color=none fcolor=none width=2
 
 r.mapcalc "slope.gen=slope.reclass"
 echo " is slope.gen ok?"
-#read ok
+##read ok
 
 g.mremove -f rast=slope.recl_big,slope.neigh7,slope.neigh5,slope.neigh3,slope.neigh1
 
@@ -184,7 +184,7 @@ r.neighbors -c input=slope.asp output=slopeasp.neigh7 method=mode size=7
 r.patch --o input=slopeasp.neigh7,slopeasp.neigh5,slopeasp.neigh3,slopeasp.neigh1 output=slopeasp.gen
 
 echo "is slopeasp.gen ok?"
-#read ok
+##read ok
 
 g.mremove -f rast=slopeasp.neigh7,slopeasp.neigh5,slopeasp.neigh3,slopeasp.neigh1
 
@@ -217,10 +217,10 @@ r.neighbors -c input=landscape output=landscape.neigh7 method=mode size=7
 r.patch --o input=landscape_big,landscape.neigh7,landscape.neigh5,landscape.neigh3,landscape.neigh1 output=landscape
 
 echo "the landscape raster is ready, code is first land use, second slope, third aspect. got it?"
-#read ok
+##read ok
 
 echo "check if landscape is ok"
-##read ok 
+###read ok 
 
 g.mremove -f rast=landscape_big,landscape.neigh7,landscape.neigh5,landscape.neigh3,landscape.neigh1
 
@@ -238,8 +238,10 @@ v.out.ogr -c input=landscape type=area dsn=$foldout/vectors/
 
 #export area stats per landscape map
 echo"
+
 The following landscape categories where created:
-">>$readme
+
+" >>$readme
 r.stats -a -p -n input=landscape fs=tab >>$readme
 
 r.mask -r
