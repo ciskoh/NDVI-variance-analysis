@@ -230,26 +230,20 @@ s=a0
 basemap=landscape_state
 mkdir -p $foldout/state
 foldout2=$foldout/state
-if [[ ycalc -eq 0 ]]; then
-	echo "using yearly quantile"
-	##read ok
-	. $sdir/variance2.sh
-else
-	. $sdir/variance.sh
-fi
 
-#TODO FOR MANAGEMENT MAP
+	. $sdir/variance.sh
+
+
 echo "continue with management???"
 ##read ok
 basemap=landscape
 s=a1
 mkdir -p $foldout/management
 foldout2=$foldout/management
-if [[ ycalc -eq 0 ]]; then
-	. $sdir/variance2.sh
-else
+
+
 	. $sdir/variance.sh
-fi
+
 ###END of classification
 g.mremove -f rast=*norm*,temp*
 r.mask -r

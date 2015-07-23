@@ -143,7 +143,9 @@ do
 		if [[ dcount -eq "0" ]]; then
 			echo "creating text file with quantile values for $g"
 			#creating column headers
-			echo "ls-code; land use; slope; aspect" >$vlist
+			echo "ls-code; land use; slope; aspect;" >$vlist
+		echo "CHECK lsvalue at $vlist"
+		read ok
 		fi
 		
 		#first time of category, adding category details
@@ -152,7 +154,7 @@ do
 			lu=$((g/100))
 			slope=$(((g/10)-(lu*10)))
 			aspect=$((g-(lu*100)-(slope*10)))
-			echo "$g; $lu; $slope; $aspect">>$vlist #updating $vlist
+			echo "$g; $lu; $slope; $aspect;">>$vlist #updating $vlist
 		fi
 		echo "check vlist at $vlist"
 		#read ok
@@ -161,7 +163,7 @@ do
 		if [[ scount -eq "0" ]]; then
 			
 	
-			sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF"
+			sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF;"
 			sed -i "1 s/$/ $sedstrg/" $vlist #writing column titles for image $h
 		echo "check single image column titles at $vlist"
 		#read ok
@@ -170,13 +172,13 @@ do
 			#writing values on the vlist file
 		echo "writing values on the vlist file"
 		#TODO append to end line
-		sedstrg2="$NDVI90; $min; $med; $varc"
+		sedstrg2="$NDVI90; $min; $med; $varc;"
 		sed -i "$ s/$/$sedstrg2/" $vlist
 		echo " check values for column $g and image $h at $vlist
 
 $g; $ndname; $NDVI90; $min; $med; $varc
 "		
-		#read ok
+		read ok
 		
 		
 		
@@ -270,7 +272,7 @@ do
 	#####read ok
 	
 	if [[ count -eq "0" ]]; then
-		sed -i "1 s/$/ Very-deg; Deg; Semi-Deg; Healthy; Veg-Pot;/" $vlist adding column titles
+		sed -i "1 s/$/ Very-deg; Deg; Semi-Deg; Healthy; Veg-Pot;/" $vlist #adding column titles
 	fi
 	d=$((count+1)) #number of line to use in file lsvalue.csv
 
@@ -288,20 +290,20 @@ do
 	a=$(r.univar -g --quiet map=tempdeg1)
 	deg1=${a##*sum=}
 
-	a=(r.univar -g --quiet map=tempdeg2)
+	a=$(r.univar -g --quiet map=tempdeg2)
 	deg2=${a##*sum=}
 
-	a=(r.univar -g --quiet map=tempdeg3)
+	a=$(r.univar -g --quiet map=tempdeg3)
 	deg3=${a##*sum=}
 
-	a=(r.univar -g --quiet map=tempdeg4)
+	a=$(r.univar -g --quiet map=tempdeg4)
 	deg4=${a##*sum=}
 
-	a=(r.univar -g --quiet map=tempdeg5)
+	a=$(r.univar -g --quiet map=tempdeg5)
 	deg5=${a##*sum=}
-
-sed -i "$d s/$/ deg1; $deg2; $deg3; $deg4; $deg5;/" $vlist
-"check values for $g in file $vlist line $d; they sould be $deg1; $deg2; $deg3; $deg4; $deg5;"
+sedstrg2="$deg1; $deg2; $deg3; $deg4; $deg5;"
+sed -i "$d s/$/ $sedstrg2/" $vlist
+"check values for $g in file $vlist line $d; they should be $deg1; $deg2; $deg3; $deg4; $deg5;"
 #read ok
 
 count=$((count+1))

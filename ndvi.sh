@@ -79,9 +79,17 @@ do
 		month=dec
 	fi
 
+	if [[ count -eq "0" ]]; then
+		
+	
+		echo "****************************
+		
+		The following images are considered for the analysis:
 
-	echo "
-	The following images are considered for the analysis:">>$readme
+	
+		">>$readme
+	fi
+
 	echo "name=$short date=$ldate image=$name" >>$readme
 	 
 	echo "month is $month; check output file $readme"
