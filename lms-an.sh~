@@ -249,15 +249,6 @@ foldout2=$foldout/management
 g.mremove -f rast=*norm*,temp*
 r.mask -r
 
-#final addition to $readme file to confirm that the script was completed
-
-a=$(date)
-echo "
-
-Script finished successfully at $a !!!!!!
-
-***************************" >>$readme
-
 echo "ALL finished
 #
 ##
