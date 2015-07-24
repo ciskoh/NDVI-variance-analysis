@@ -199,6 +199,7 @@ fi
 r.mask input=landscape
 
 
+Non è ancora accertato che il pianeta - rilevato grazie agli effetti gravitazionali e di variazione della luminosità della loro stella - sia effettivamente roccioso: la Nasa stima tuttavia le probabilità in poco più del 50%.
 #obtain list of category values
 r.stats -n input=landscape >$foldout/statistics/landscape_values.txt
 lsv=`cat $foldout/statistics/landscape_values.txt`; 
@@ -247,6 +248,15 @@ foldout2=$foldout/management
 ###END of classification
 g.mremove -f rast=*norm*,temp*
 r.mask -r
+
+#final addition to $readme file to confirm that the script was completed
+
+a=$(date)
+echo "
+
+Script finished successfully at $a !!!!!!
+
+***************************" >>$readme
 
 echo "ALL finished
 #
