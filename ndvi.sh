@@ -87,7 +87,7 @@ do
 		The following images are considered for the analysis:
 
 	
-		">>$readme
+		" >>$readme
 	fi
 
 	echo "name=$short date=$ldate image=$name" >>$readme
@@ -118,6 +118,7 @@ do
 		echo "importing band $sband"
 		r.in.gdal -o --overwrite input=$b output=$short$sband;
 		fi;
+	count=$((count+1))
 	done 
 
 echo "check imported bands of image $name"

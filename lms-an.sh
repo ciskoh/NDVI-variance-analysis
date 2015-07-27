@@ -225,6 +225,7 @@ if [ "$imp" -eq "1" ];
 fi
 
 ########classification of ndvi variance through variance.sh
+r.mask -r
 
 # for state map
 s=a0
@@ -234,6 +235,7 @@ foldout2=$foldout/state
 
 	. $sdir/variance.sh
 
+r.mask -r
 
 echo "continue with management???"
 ##read ok

@@ -7,7 +7,7 @@
 #obtain list of category values
 lsv=$(r.stats -n input=$basemap)
 echo "this is lsv: $lsv"
-######read ok
+#######read ok
 
 #starting cycle for each category
 
@@ -29,7 +29,7 @@ do
 	#creating mask for category $g
 	echo "creating mask for category $g"
 	r.mask -o input=$basemap maskcats=$g
-	#####read ok
+	######read ok
 	nlist=$(g.mlist type=rast pattern=corr*)
 	nlist2=$(g.mlist type=rast pattern=corr* separator=comma)
 	#creating output folder
@@ -39,13 +39,15 @@ do
 	#calculation of year round 90th quantile
 	if [[ scount -eq "0" ]]; then #if for creating folder for statistics
 			mkdir -p $foldout2/category_stats
-			mkdir -p $foldout2/category_stats/$g
+			
 		fi
+		mkdir -p $foldout2/category_stats/$g #
+
 	#calculation of statistics
 	r.univar -e map=$nlist2 percentile=25,50,75,90,2 >$foldout2/category_stats/$g-yearly-stats.txt
 
 	echo "check $foldout2/category_stats/$g-yearly-stats.txt"
-	####read ok
+	#####read ok
 	#identifying 90th quantile
 	mpath=$foldout2/category_stats/$g-yearly-stats.txt #path to yearly stats
 	p90a=$(sed -n '22p' < $mpath)
@@ -59,7 +61,7 @@ do
 	p2=${p2a#*:}
 	lquant=$(echo "$p2*1000" | bc -l)
 	echo "yquant is $yquant nad lquant is $lquant"
-	###read ok
+	####read ok
 #cycle through images
 #counter
 	count=0
@@ -73,8 +75,8 @@ do
 	working on image $h for category $g
 
 	"
-######read ok
-		#######read ok
+#######read ok
+		########read ok
 		
 	#actual calculation of percentiles
 		if [[ count -eq "0" ]]; then
@@ -98,7 +100,7 @@ do
 		
 
 		echo "check stats in $foldout2/statistics/rec_rules/rec_rules_$g"-"$ndname.txt"
-		#######read ok
+		########read ok
 		
 		#exporting quantile values in other text file for $g
 
@@ -123,7 +125,7 @@ do
 		
 
 		echo "check statistics @ $vlist"
-		#######read ok
+		########read ok
 
 		##normalised ndvi maps using all year step quantiles
 
@@ -137,7 +139,7 @@ do
 		#CREATING TEXTFILE WITH LANDSCAPE STATS
 		
 		#filename for value list for each landscape class
-			vlist=$foldout/statistics/lsvalue.csv
+			vlist=$foldout/statistics/$s"_"lsvalue.csv
 		#first time file creation
 		dcount=$((count+scount))
 		if [[ dcount -eq "0" ]]; then
@@ -145,7 +147,7 @@ do
 			#creating column headers
 			echo "ls-code; land use; slope; aspect;" >$vlist
 		echo "CHECK lsvalue at $vlist"
-		read ok
+		##read ok
 		fi
 		
 		#first time of category, adding category details
@@ -157,7 +159,7 @@ do
 			echo "$g; $lu; $slope; $aspect;">>$vlist #updating $vlist
 		fi
 		echo "check vlist at $vlist"
-		#read ok
+		##read ok
 		
 
 		if [[ scount -eq "0" ]]; then
@@ -166,19 +168,19 @@ do
 			sedstrg="$h-VP; $h-min; $h-med; $h-varCOEFF;"
 			sed -i "1 s/$/ $sedstrg/" $vlist #writing column titles for image $h
 		echo "check single image column titles at $vlist"
-		#read ok
+		##read ok
 		fi 
 
 			#writing values on the vlist file
 		echo "writing values on the vlist file"
 		#TODO append to end line
 		sedstrg2="$NDVI90; $min; $med; $varc;"
-		sed -i "$ s/$/$sedstrg2/" $vlist
+		sed -i "$ s/$/ $sedstrg2/" $vlist
 		echo " check values for column $g and image $h at $vlist
 
 $g; $ndname; $NDVI90; $min; $med; $varc
 "		
-		read ok
+		##read ok
 		
 		
 		
@@ -205,7 +207,7 @@ $g; $ndname; $NDVI90; $min; $med; $varc
 		cycle finished for category $g and image $h
 		
 		";
-		####read ok
+		#####read ok
 
 	done
 	r.mask -r
@@ -223,7 +225,7 @@ $g; $ndname; $NDVI90; $min; $med; $varc
 	CYLE finished for all images on category $g
 
 	##############################################################"
-	####read ok 
+	#####read ok 
 	scount=$((scount+1))
 	r.mask -r;
 
@@ -233,31 +235,34 @@ done
 echo "check mask"
 
 r.mask -o input=$basemap
-####read ok
+#####read ok
 ##Merging all the images of one timestep together using gdal
 dir $foldout2/rasters/*/
-####read ok
+#####read ok
 for i in $foldout2/rasters/*/; do
 	cd $i
 	nd=$(basename $i)
 	list=$(dir $i)
 	echo "nd is $nd and list is $list"
-	####read ok
-	gdal_merge.py -n 255 -of GTiff -o -a_nodata 255 $foldout2/rasters/final_$nd".tiff" $list
+	##read ok
+	gdal_merge.py -n 255 -of GTiff -a_nodata 255 -o $foldout2/rasters/final_$nd".tiff" $list
 	echo "merged"
-	####read ok
+	##read ok
 	#reimporting all final images per each month
 	r.in.gdal --overwrite input=$foldout2/rasters/final_$nd".tiff" output=$s"_final_"$nd;
 done
+r.mask -r
 
 echo "prepare for final map"
-####read ok
-fl=$(g.mlist type=rast pattern=$s"_final*" separator=comma)
+#####read ok
+fl=$(g.mlist type=rast pattern=$s"_final_*" separator=comma)
 echo "fl is $fl"
+#read ok
 #creation of mode and stddev map
 r.series input=$fl output=$s"_final_allyear",$s"_final_stdev",$s"_final_linreg" method=average,stddev,slope
 echo "check "$s"_final_allyear",$s"_final_stdev",$s"_final_linreg before exporting"
-####read ok
+##read ok
+r.mask -r
 
 #extracting values from final map
 count=0
@@ -269,7 +274,7 @@ do
 	#creating mask for category $g
 	echo "creating mask for category $g"
 	r.mask -o input=$basemap maskcats=$g
-	#####read ok
+	######read ok
 	
 	if [[ count -eq "0" ]]; then
 		sed -i "1 s/$/ Very-deg; Deg; Semi-Deg; Healthy; Veg-Pot;/" $vlist #adding column titles
@@ -277,11 +282,11 @@ do
 	d=$((count+1)) #number of line to use in file lsvalue.csv
 
 	#extracting different deg categories from final map
-	fin=$s"_final_allyear"
+	fin=$s"_finance-analysis/variance.sh: line 312: check values for 331 in file /media/matt/MJR-gis/3-Spain/ls_analysis/july/statistics/a1_lsvalue.csv line 44; they should be 7; 93; 2l_allyear"
 	r.mapcalc "tempdeg1=$fin<25"
-	r.mapcalc "tempdeg2=$fin>25 AND $fin<50"
-	r.mapcalc "tempdeg3=$fin>50 AND $fin<75"
-	r.mapcalc "tempdeg4=$fin>75 AND $fin<90"
+	r.mapcalc "tempdeg2=$fin>25 && $fin<50"
+	r.mapcalc "tempdeg3=$fin>50 && $fin<75"
+	r.mapcalc "tempdeg4=$fin>75 && $fin<90"
 	r.mapcalc "tempdeg5=$fin>90"
 	
 	
@@ -301,13 +306,17 @@ do
 
 	a=$(r.univar -g --quiet map=tempdeg5)
 	deg5=${a##*sum=}
-sedstrg2="$deg1; $deg2; $deg3; $deg4; $deg5;"
-sed -i "$d s/$/ $sedstrg2/" $vlist
-"check values for $g in file $vlist line $d; they should be $deg1; $deg2; $deg3; $deg4; $deg5;"
-#read ok
+	sedstrg2="$deg1; $deg2; $deg3; $deg4; $deg5;"
+	echo "check this: $sedstrg2"
+	#read ok
+	sed -i "$d s/$/ $sedstrg2/" $vlist
+	echo "check values for $g in file $vlist line $d; they should be $deg1; $deg2; $deg3; $deg4; $deg5;"
 
-count=$((count+1))
+##read ok
+
+	count=$((count+1))
 done
+r.mask -r 
 
 #exporting final maps
 r.out.gdal input=$s"_final_allyear" output=/$foldout/rasters/$s"_final_allyear.tiff" nodata=255
