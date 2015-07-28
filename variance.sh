@@ -282,7 +282,7 @@ do
 	d=$((count+1)) #number of line to use in file lsvalue.csv
 
 	#extracting different deg categories from final map
-	fin=$s"_finance-analysis/variance.sh: line 312: check values for 331 in file /media/matt/MJR-gis/3-Spain/ls_analysis/july/statistics/a1_lsvalue.csv line 44; they should be 7; 93; 2l_allyear"
+	fin=$s"_final_allyear"
 	r.mapcalc "tempdeg1=$fin<25"
 	r.mapcalc "tempdeg2=$fin>25 && $fin<50"
 	r.mapcalc "tempdeg3=$fin>50 && $fin<75"
