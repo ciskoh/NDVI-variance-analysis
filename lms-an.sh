@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#path to variables
+#path to file with variables to be changed for each application
 varpath=/media/matt/MJR-gis/3-Spain/ls_analysis/new/scriptvar.sh
 
 ###MAIN Script to evaluate NDVI change in one area throughout the year
@@ -155,23 +155,24 @@ fi
 
 #writing file with script details
 readme=$foldout/README-script-details.txt #path to readme txt
-echo "Evaluation of NDVI change in one area throughout the year" >$readme
+echo "Analysis of NDVI Variance in one area throughout the year" >$readme
 loc=$(g.gisenv -n get=LOCATION_NAME)
 da=$(date)
 echo "Executed for the area of $loc on $da">>$readme 
 
 sets=$(sed -n 3,13p $varpath)
 echo "
-Using the following settings:
-$sets">>$readme
+The following settings where used:
 
-echo "check readme file at $readme"
-#read ok
+$sets
+
+***************************">>$readme
+
 
 echo "$foldout , $fold $code $LU, $arul"
 ##read ok
 #create output folder
-#TODO optimize folder creation
+
 mkdir -p $foldout/ndvi
 mkdir -p $foldout/statistics
 mkdir -p $foldout/vectors
@@ -199,7 +200,7 @@ fi
 r.mask input=landscape
 
 
-Non è ancora accertato che il pianeta - rilevato grazie agli effetti gravitazionali e di variazione della luminosità della loro stella - sia effettivamente roccioso: la Nasa stima tuttavia le probabilità in poco più del 50%.
+
 #obtain list of category values
 r.stats -n input=landscape >$foldout/statistics/landscape_values.txt
 lsv=`cat $foldout/statistics/landscape_values.txt`; 
@@ -233,7 +234,7 @@ basemap=landscape_state
 mkdir -p $foldout/state
 foldout2=$foldout/state
 
-	. $sdir/variance.sh
+	. $sdir/variance.sh > /tmp/output-variance.txt
 
 r.mask -r
 
@@ -245,7 +246,7 @@ mkdir -p $foldout/management
 foldout2=$foldout/management
 
 
-	. $sdir/variance.sh
+	. $sdir/variance.sh > /tmp/output-variance2.txt
 
 ###END of classification
 g.mremove -f rast=*norm*,temp*
@@ -255,6 +256,7 @@ r.mask -r
 
 a=$(date)
 echo "
+***************************
 
 Script finished successfully at $a !!!!!!
 

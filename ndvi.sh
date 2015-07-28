@@ -82,12 +82,13 @@ do
 	if [[ count -eq "0" ]]; then
 		
 	
-		echo "****************************
+		echo "
+
+****************************
 		
 		The following images are considered for the analysis:
 
-	
-		" >>$readme
+" >>$readme
 	fi
 
 	echo "name=$short date=$ldate image=$name" >>$readme
@@ -118,64 +119,64 @@ do
 		echo "importing band $sband"
 		r.in.gdal -o --overwrite input=$b output=$short$sband;
 		fi;
-	count=$((count+1))
+	
 	done 
 
-echo "check imported bands of image $name"
-####read ok
+	echo "check imported bands of image $name"
+	####read ok
 
-# 2-ATHMOSPHERIC CORRECTION
+	# 2-ATHMOSPHERIC CORRECTION
 
-#name of metadata file
-meta=$i/$name"_MTL.txt"
+	#name of metadata file
+	meta=$i/$name"_MTL.txt"
 
-#name of corrected picture
-corr="corr_"$short"_"
+	#name of corrected picture
+	corr="corr_"$short"_"
 
-#athmospheric correction
+	#athmospheric correction
 
-i.landsat.toar input_prefix=$short"_B" output_prefix=$corr metfile=$meta sensor=ot8 method=dos2
+	i.landsat.toar input_prefix=$short"_B" output_prefix=$corr metfile=$meta sensor=ot8 method=dos2
 
-echo "check athmospheric corrected images"
-####read ok
+	echo "check athmospheric corrected images"
+	####read ok
 
-#3-ndvi calculation
-#ndvi for corrected images
+	#3-ndvi calculation
+	#ndvi for corrected images
 
-b4=$corr"4"
-b5=$corr"5"
+	b4=$corr"4"
+	b5=$corr"5"
 
-echo "this are the rasters for ndvi: $b4 and $b5"
-####read ok
-
-
-#NDVI calc-string for mapcalc
-
-r.mapcalc "corr$short=float($b5-$b4)/($b5+$b4)"
-
-echo "verify NDVI: corr$short"
-
-#exporting NDVI
-
-r.out.gdal -c -f input=corr$short type=Float64 output=$foldout/ndvi/corr_$short".tif"
-
-echo "check exported ndvi at $foldout/ndvi"
+	echo "this are the rasters for ndvi: $b4 and $b5"
+	####read ok
 
 
+	#NDVI calc-string for mapcalc
 
-#deleting useless raster
-echo "cycle finished!!!!!
+	r.mapcalc "corr$short=float($b5-$b4)/($b5+$b4)"
+
+	echo "verify NDVI: corr$short"
+
+	#exporting NDVI
+
+	r.out.gdal -c -f input=corr$short type=Float64 output=$foldout/ndvi/corr_$short".tif"
+
+	echo "check exported ndvi at $foldout/ndvi"
 
 
 
-deleting useless raster...."
+	#deleting useless raster
+	echo "cycle finished!!!!!
 
-g.mremove -f rast=$short*
-g.mremove -f rast=$corr*
 
-echo "cycle restarting"
-####read ok
 
+	deleting useless raster...."
+
+	g.mremove -f rast=$short*
+	g.mremove -f rast=$corr*
+
+	echo "cycle restarting"
+	####read ok
+count=$((count+1))
 done
 
 #obtain list of all ndvi maps
