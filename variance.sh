@@ -259,7 +259,7 @@ fl=$(g.mlist type=rast pattern=$s"_final_*" separator=comma)
 echo "fl is $fl"
 #read ok
 #creation of mode and stddev map
-r.series input=$fl output=$s"_final_allyear",$s"_final_stdev",$s"_final_linreg" method=$sermode,stddev,slope
+r.series input=$fl output=$s"_final_allyear",$s"_final_stdev",$s"_final_linreg" method=mode,stddev,slope
 echo "check "$s"_final_allyear",$s"_final_stdev",$s"_final_linreg before exporting"
 ##read ok
 r.mask -r
